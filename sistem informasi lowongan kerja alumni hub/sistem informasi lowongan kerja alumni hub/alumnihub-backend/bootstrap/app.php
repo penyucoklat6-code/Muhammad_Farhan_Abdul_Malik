@@ -1,0 +1,59 @@
+<?php
+
+use App\Http\Middleware\EnsureOtpVerified;
+use App\Http\Middleware\RoleMiddleware;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\HandleCors;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware): void {
+        // Aktifkan CORS agar frontend React bisa akses API
+        $middleware->prepend(HandleCors::class);
+
+        // Register custom middleware aliases
+        $middleware->alias([
+            'otp.verified' => EnsureOtpVerified::class,
+            'role'         => RoleMiddleware::class,
+        ]);
+
+        // Izinkan CORS untuk request dari frontend React (localhost:5173)
+        $middleware->validateCsrfTokens(except: ['api/*']);
+    })
+    ->withExceptions(function (Exceptions $exceptions): void {
+        // Return JSON untuk semua error di API routes
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated. Silakan login terlebih dahulu.',
+                ], 401);
+            }
+        });
+
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Data yang dikirim tidak valid.',
+                    'errors'  => $e->errors(),
+                ], 422);
+            }
+        });
+
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Resource tidak ditemukan.',
+                ], 404);
+            }
+        });
+    })->create();

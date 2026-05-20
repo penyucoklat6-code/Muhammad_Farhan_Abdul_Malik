@@ -1,0 +1,72 @@
+=====================================
+  AlumniHub UHAMKA — Cara Menjalankan
+=====================================
+
+SYARAT SEBELUM MULAI:
+1. XAMPP sudah terinstal
+2. Sudah membuat database "alumni_hub" di phpMyAdmin
+3. File .env sudah diisi Gmail App Password (untuk OTP)
+
+
+==============================
+CARA PALING MUDAH (1 Klik):
+==============================
+
+Klik dua kali file:  JALANKAN_WEBSITE.bat
+  → Browser akan terbuka otomatis ke http://localhost:5173
+
+
+==============================
+CARA MANUAL (jika perlu):
+==============================
+
+LANGKAH 1 — Nyalakan XAMPP
+  - Buka XAMPP Control Panel
+  - Klik [Start] pada Apache
+  - Klik [Start] pada MySQL
+
+LANGKAH 2 — Klik dua kali: START_BACKEND.bat
+  - Tunggu muncul tulisan "Server running on http://127.0.0.1:8000"
+  - JANGAN TUTUP jendela ini
+
+LANGKAH 3 — Klik dua kali: START_FRONTEND.bat
+  - Tunggu muncul tulisan "Local: http://localhost:5173/"
+  - JANGAN TUTUP jendela ini
+
+LANGKAH 4 — Buka browser, ketik:
+  http://localhost:5173
+
+
+==============================
+LOKASI FILE PENTING:
+==============================
+
+  JALANKAN_WEBSITE.bat  ← Klik ini untuk jalankan semua sekaligus
+  START_BACKEND.bat     ← Khusus backend saja
+  START_FRONTEND.bat    ← Khusus frontend saja
+  
+  alumnihub-backend/.env  ← File konfigurasi (email, database)
+
+
+==============================
+AKSES LAINNYA:
+==============================
+
+  Website          : http://localhost:5173
+  API Backend      : http://localhost:8000
+  phpMyAdmin       : http://localhost:8001/phpmyadmin
+
+
+==============================
+JIKA ADA MASALAH:
+==============================
+
+  Error "Database not found"
+  → Buat database "alumni_hub" di phpMyAdmin
+
+  OTP tidak masuk ke email
+  → Cek konfigurasi MAIL di file .env
+
+  Website tidak bisa dibuka
+  → Pastikan kedua jendela CMD masih terbuka
+  → Pastikan XAMPP MySQL sudah Start
